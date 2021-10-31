@@ -1,1 +1,2 @@
-# DMS
+# deliveryMS
+Delivery Company Management System
