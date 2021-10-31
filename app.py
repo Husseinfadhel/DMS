@@ -31,5 +31,5 @@ def add_client_post():
 
 @app.route('/client', methods=['GET'])
 def client():
-
-    return render_template('client.html')
+    query = Client.query.all()
+    return render_template('client.html', query=query)

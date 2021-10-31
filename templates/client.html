@@ -1,9 +1,24 @@
-{% extends "basegrid.html" %}
+{% extends "base.html" %}
 
-{% block app_content %}
+{% block content %}
 
-    {{ grid.display()|safe }}
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>اسم الزبون</th>
+        <th>رقم الهاتف</th>
+        <th>العنوان</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in query %}
+        <tr>
+          <td>{{ record.name }}</td>
+          <td>{{ record.phone }}</td>
+          <td>{{ record.address }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
-{% endblock app_content %}
-
-{% block scripts %}{% endblock %}
+{% endblock %}
