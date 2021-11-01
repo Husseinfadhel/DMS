@@ -11,3 +11,9 @@ class AddClient(FlaskForm):
 
 class Search(FlaskForm):
     search = StringField('search')
+
+
+class AddDriver(FlaskForm):
+    name = StringField("name", validators=[DataRequired()])
+    phone = StringField("phone", validators=[DataRequired()])
+    card_no = StringField("card_no", validators=[DataRequired()])

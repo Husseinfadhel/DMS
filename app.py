@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, url_for, redirect
-from models import setup_db, Client
-from forms import AddClient, Search
+from models import setup_db, Client, Driver
+from forms import AddClient, Search, AddDriver
 
 app = Flask(__name__, template_folder='templates')
 
@@ -43,7 +43,42 @@ def client_post():
     form = Search()
     filte = Client.query.filter(db.or_(
         Client.name.like('%{}%'.format(search)),
-        Client.phone.like('%{}%'.format(search))
+        Client.phone.like('%{}%'.format(search)),
+        Client.address.like('%{}%'.format(search))
     ))
     return render_template('client.html', query=filte, form=form)
 
+
+@app.route('/add/driver', methods=['GET'])
+def add_driver():
+    driver = AddDriver()
+    return render_template('addriver.html', form=driver)
+
+
+@app.route('/add/driver', methods=['POST'])
+def add_driver_post():
+    new = Driver(name=request.form['name'],
+                 phone=request.form['phone'],
+                 card_no=request.form['card_no']
+                 )
+    Driver.insert(new)
+    return redirect(url_for('main'))
+
+
+@app.route('/driver', methods=['GET'])
+def driver():
+    query = Driver.query.all()
+    form = Search()
+    return render_template('driver.html', query=query, form=form)
+
+
+@app.route('/driver', methods=['POST'])
+def driver_post():
+    search = request.form['search']
+    form = Search()
+    filte = Driver.query.filter(db.or_(
+        Driver.name.like('%{}%'.format(search)),
+        Driver.phone.like('%{}%'.format(search)),
+        Driver.card_no.like('%{}%'.format(search))
+    ))
+    return render_template('driver.html', query=filte, form=form)

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block style %}
+<style>
+.form-heading {
+                text-align: center;
+    padding: 4px;
+}
+.form-group{
+    text-align: center;
+    padding: 7px;
+}
+.btn{
+    text-align: center;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="flex-container">
+<div class="justify-content-center">
+    <div class="row align-items-center">
+<div class="form-wrapper">
+
+  <form method="post" class="form">
+              <h3 class="form-heading">أضافة سائق جديد</h3>
+      <img src="../static/images/delivery.jpg" class="rounded mx-auto d-block" alt="...">
+<div class="form-group">
+            <label for="name">أسم السائق</label>
+            {{ form.name(class_ = 'form-control', autofocus = true) }}
+    </div>
+      <div class="form-group">
+            <label for="phone">رقم الهاتف</label>
+            {{ form.phone(class_ = 'form-control', autofocus = true) }}
+    </div>
+      <div class="form-group">
+            <label for="card_no">رقم التسلسل</label>
+            {{ form.card_no(class_ = 'form-control', autofocus = true) }}
+    </div>
+      <div class="d-grid gap-2 col-6 mx-auto">
+
+      <input type="submit" value="أضافة" class="btn btn-primary">
+      </div>
+  </form>
+</div>
+</div>
+    </div>
+</div>
+
+{% endblock %}

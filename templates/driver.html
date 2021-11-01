@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="post" class="form">
+<div class="form-group">
+            <label name="query" >بحث</label>
+              {{ form.search(class_ = 'form-control', autofocus = true) }}
+
+    </div>
+  <input type="submit" value="بحث" class="btn btn-outline-primary">
+
+</form>
+
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>اسم السائق</th>
+        <th>رقم الهاتف</th>
+        <th>رقم التسلسل</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in query %}
+        <tr>
+          <td>{{ record.name }}</td>
+          <td>{{ record.phone }}</td>
+          <td>{{ record.card_no }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+<a href="/main" class="btn btn-primary">رجوع</a>
+{% endblock %}
