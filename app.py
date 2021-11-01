@@ -157,7 +157,7 @@ def order_post():
     form = Search()
     filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
                                                             Driver.id == Orders.driver_id, db.or_(
-        Orders.invoice_num.like('%{}%'.format(search))
+        Orders.invoice_num.like('%{}%'.format(search)),Client.name.like('%{}%'.format(search))
     ))
     return render_template('order.html', query=filte, form=form)
 
