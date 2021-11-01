@@ -3,3 +3,4 @@ venv
 migrations
 .idea
 server.db
+__pycache__

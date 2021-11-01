@@ -21,7 +21,7 @@ def setup_db(app):
 class Users(db.Model):
     __tablename__ = "Users"
     id = Column(Integer, primary_key=True)
-    username = Column(String(500))
+    username = Column(String)
     password = Column(Integer)
     auth = Column(Integer)
 
@@ -40,10 +40,18 @@ class Users(db.Model):
 class Client(db.Model):
     __tablename__ = "Client"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(500))
+    name = Column(String)
     phone = Column(Integer)
-    address = Column(String(500))
+    address = Column(String)
     order = db.relationship('Orders', backref=db.backref('client', uselist=False), lazy='dynamic')
+
+    def format(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'address': self.address,
+            "phone": self.phone
+        }
 
     def insert(self):
         db.session.add(self)
@@ -60,9 +68,9 @@ class Client(db.Model):
 class Masareef(db.Model):
     __tablename__ = "Masareef"
     id = Column(Integer, primary_key=True)
-    reason = Column(String(500))
+    reason = Column(String)
     amount = Column(Integer)
-    date = Column(String(100))
+    date = Column(String)
 
     def insert(self):
         db.session.add(self)
@@ -79,7 +87,7 @@ class Masareef(db.Model):
 class Driver(db.Model):
     __tablename__ = "Driver"
     id = Column(Integer, primary_key=True)
-    name = Column(String(500))
+    name = Column(String)
     phone = Column(Integer)
     card_no = Column(Integer)
     order = db.relationship('Orders', backref=db.backref('driver', uselist=False), lazy='dynamic')

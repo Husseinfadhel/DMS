@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
+<form method="post" class="form">
+<div class="form-group">
+            <label name="query" >بحث</label>
+              {{ form.search(class_ = 'form-control', autofocus = true) }}
+
+    </div>
+  <input type="submit" value="بحث" class="btn btn-outline-primary">
+
+</form>
 
   <table id="data" class="table table-striped">
     <thead>
@@ -20,5 +29,5 @@
       {% endfor %}
     </tbody>
   </table>
-
+<a href="/main" class="btn btn-primary">رجوع</a>
 {% endblock %}

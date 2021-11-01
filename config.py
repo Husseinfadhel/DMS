@@ -6,4 +6,4 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Connect to the database
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:MyNewPassword@127.0.0.1:3306/server?charset=utf8mb4"
+SQLALCHEMY_DATABASE_URI = "sqlite:///server.db"

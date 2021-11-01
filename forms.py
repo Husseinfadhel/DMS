@@ -7,3 +7,7 @@ class AddClient(FlaskForm):
     name = StringField("name", validators=[DataRequired()])
     phone = StringField("phone", validators=[DataRequired()])
     address = StringField("address", validators=[DataRequired()])
+
+
+class Search(FlaskForm):
+    search = StringField('search')

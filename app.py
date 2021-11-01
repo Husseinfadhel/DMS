@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, flash, url_for, redirect
 from models import setup_db, Client
-from forms import AddClient
+from forms import AddClient, Search
+
 app = Flask(__name__, template_folder='templates')
 
 db = setup_db(app)
@@ -32,4 +33,17 @@ def add_client_post():
 @app.route('/client', methods=['GET'])
 def client():
     query = Client.query.all()
-    return render_template('client.html', query=query)
+    form = Search()
+    return render_template('client.html', query=query, form=form)
+
+
+@app.route('/client', methods=['POST'])
+def client_post():
+    search = request.form['search']
+    form = Search()
+    filte = Client.query.filter(db.or_(
+        Client.name.like('%{}%'.format(search)),
+        Client.phone.like('%{}%'.format(search))
+    ))
+    return render_template('client.html', query=filte, form=form)
+
