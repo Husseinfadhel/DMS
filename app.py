@@ -1,6 +1,8 @@
+import json
+
 from flask import Flask, render_template, request, flash, url_for, redirect
-from models import setup_db, Client, Driver, Masareef
-from forms import AddClient, Search, AddDriver, AddMasrf
+from models import setup_db, Client, Driver, Masareef, Orders
+from forms import AddClient, Search, AddDriver, AddMasrf, AddOrder
 
 app = Flask(__name__, template_folder='templates')
 
@@ -99,6 +101,7 @@ def add_masrf_post():
     Masareef.insert(new)
     return redirect(url_for('main'))
 
+
 @app.route('/masrf', methods=['GET'])
 def masrf():
     query = Masareef.query.all()
@@ -116,3 +119,57 @@ def masrf_post():
         Masareef.date.like('%{}%'.format(search))
     ))
     return render_template('masrf.html', query=filte, form=form)
+
+
+@app.route('/add/order', methods=['GET'])
+def add_order():
+    order = AddOrder()
+    clients = Client.query.all()
+    drivers = Driver.query.all()
+    return render_template('addorder.html', form=order, clients=clients, drivers=drivers)
+
+
+@app.route('/add/order', methods=['POST'])
+def add_order_post():
+    record = Client.query.filter_by(name=request.form['client']).first()
+    new = Orders(invoice_num=request.form['invoice_num'],
+                 client_id=record.id,
+                 total_cost=request.form['total'],
+                 net_cost=request.form['net'],
+                 driver_id=request.form['driver'],
+                 date=request.form['date']
+                 )
+    Orders.insert(new)
+    return redirect(url_for('main'))
+
+
+@app.route('/order', methods=['GET'])
+def order():
+    query = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
+                                                            Driver.id == Orders.driver_id).all()
+    form = Search()
+    return render_template('order.html', query=query, form=form)
+
+
+@app.route('/order', methods=['POST'])
+def order_post():
+    search = request.form['search']
+    form = Search()
+    filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
+                                                            Driver.id == Orders.driver_id, db.or_(
+        Orders.invoice_num.like('%{}%'.format(search))
+    ))
+    return render_template('order.html', query=filte, form=form)
+
+
+@app.route('/state', methods=['POST'])
+def state():
+
+    change = Orders.query.get(request.form['order'])
+    change.state = request.form['state']
+    Orders.update(change)
+    return redirect(url_for("order"))
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

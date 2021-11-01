@@ -109,10 +109,11 @@ class Orders(db.Model):
     id = Column(Integer, primary_key=True)
     invoice_num = Column(Integer)
     client_id = Column(Integer, ForeignKey('Client.id'))
+    date = Column(String)
     total_cost = Column(Integer)
     net_cost = Column(Integer)
     driver_id = Column(Integer, ForeignKey('Driver.id'))
-    state = Column(Integer)
+    state = Column(Integer, default=0)
 
     def insert(self):
         db.session.add(self)

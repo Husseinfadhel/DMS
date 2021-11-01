@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block style %}
+<style>
+.form-heading {
+                text-align: center;
+    padding: 4px;
+}
+.form-group{
+    text-align: center;
+    padding: 7px;
+}
+.btn{
+    text-align: center;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+    <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.6/dist/autoComplete.min.js"></script>
+
+    <div class="flex-container">
+<div class="justify-content-center">
+    <div class="row align-items-center">
+<div class="form-wrapper">
+
+  <form method="post" class="form">
+              <h3 class="form-heading">أضافة طلبية جديدة </h3>
+      <img src="../static/images/casa.jpg" class="rounded mx-auto d-block" alt="...">
+<div class="form-group">
+             <label for="client">اسم الزبون</label>
+  <input name = "client" type="text" id="autoComplete" class="form-control">
+
+    </div>
+      <div class="form-group">
+            <label for="phone">رقم الوصل</label>
+            {{ form.invoice_num(class_ = 'form-control') }}
+    </div>
+      <div class="form-group">
+            <label for="date">التاريخ</label>
+
+            {{ form.date(class_ = 'form-control') }}
+    </div>
+            <div class="form-group">
+            <label for="total">المبلغ الكلي</label>
+            {{ form.total(class_ = 'form-control') }}
+    </div>
+            <div class="form-group">
+            <label for="net">صافي الربح</label>
+            {{ form.net(class_ = 'form-control') }}
+    </div>
+<div class="form-group">
+                <label for="drive">اختيار السائق</label>
+
+              <select class="form-select" name="driver" aria-label="Default select example">
+  <option selected>اختيار</option>
+                  {% for record in drivers %}
+  <option value="{{record.id}}">{{record.name}}</option>
+{% endfor %}
+</select>
+
+    </div>
+      <div class="d-grid gap-2 col-6 mx-auto">
+
+      <input type="submit" value="أضافة" class="btn btn-primary">
+      </div>
+  </form>
+</div>
+</div>
+    </div>
+</div>
+
+
+    <script>
+        function search(){const autoCompleteJS = new autoComplete({
+            placeHolder: "البحث عن زبون ....",
+            data: {
+                src:[{% for record in clients %}
+
+          "{{ record.name }}",
+
+      {% endfor %}
+    ],
+                cache: true,
+            },
+            resultItem: {
+                highlight: true
+            },
+            events: {
+                input: {
+                    selection: (event) => {
+                        const selection = event.detail.selection.value;
+                        autoCompleteJS.input.value = selection;
+                    }
+                }
+            }
+        });}
+        search()
+    </script>
+{% endblock %}
