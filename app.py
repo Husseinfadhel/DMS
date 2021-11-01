@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, url_for, redirect
-from models import setup_db, Client, Driver
-from forms import AddClient, Search, AddDriver
+from models import setup_db, Client, Driver, Masareef
+from forms import AddClient, Search, AddDriver, AddMasrf
 
 app = Flask(__name__, template_folder='templates')
 
@@ -82,3 +82,37 @@ def driver_post():
         Driver.card_no.like('%{}%'.format(search))
     ))
     return render_template('driver.html', query=filte, form=form)
+
+
+@app.route('/add/masrf', methods=['GET'])
+def add_masrf():
+    masrf = AddMasrf()
+    return render_template('addmasaref.html', form=masrf)
+
+
+@app.route('/add/masrf', methods=['POST'])
+def add_masrf_post():
+    new = Masareef(reason=request.form['reason'],
+                   amount=request.form['amount'],
+                   date=request.form['date']
+                   )
+    Masareef.insert(new)
+    return redirect(url_for('main'))
+
+@app.route('/masrf', methods=['GET'])
+def masrf():
+    query = Masareef.query.all()
+    form = Search()
+    return render_template('masrf.html', query=query, form=form)
+
+
+@app.route('/masrf', methods=['POST'])
+def masrf_post():
+    search = request.form['search']
+    form = Search()
+    filte = Masareef.query.filter(db.or_(
+        Masareef.reason.like('%{}%'.format(search)),
+        Masareef.amount.like('%{}%'.format(search)),
+        Masareef.date.like('%{}%'.format(search))
+    ))
+    return render_template('masrf.html', query=filte, form=form)

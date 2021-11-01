@@ -17,3 +17,9 @@ class AddDriver(FlaskForm):
     name = StringField("name", validators=[DataRequired()])
     phone = StringField("phone", validators=[DataRequired()])
     card_no = StringField("card_no", validators=[DataRequired()])
+
+
+class AddMasrf(FlaskForm):
+    reason = StringField("name", validators=[DataRequired()])
+    amount = StringField("phone", validators=[DataRequired()])
+    date = StringField("card_no", validators=[DataRequired()])
