@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="post" class="form">
+<div class="form-group">
+            <label name="query" >بحث</label>
+              {{ form.search(class_ = 'form-control', autofocus = true) }}
+
+    </div>
+  <input type="submit" value="بحث" class="btn btn-outline-primary">
+
+</form>
+
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>اسم الزبون</th>
+        <th>رقم الوصل</th>
+        <th>العنوان</th>
+        <th>رقم الهاتف</th>
+        <th>المبلغ الكلي</th>
+        <th>الربح الصافي</th>
+        <th> اسم السائق</th>
+        <th> التاريخ </th>
+        <th> الحالة </th>
+        <th> تغيير الحالية </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for Orders, Driver, Client in query %}
+        <tr>
+          <td>{{ Client.name }}</td>
+          <td>{{ Orders.invoice_num }}</td>
+          <td>{{ Client.address }}</td>
+          <td>{{ Client.phone }}</td>
+          <td>{{ Orders.total_cost}}</td>
+          <td>{{ Orders.net_cost}}</td>
+          <td>{{ Driver.name}}</td>
+          <td>{{ Orders.date}}</td>
+          {% if Orders.state==0 %}
+
+            {% set row="قيد التوصيل" %}
+            {% elif Orders.state==1 %}
+            {% set row="تم التوصيل" %}
+            {% elif Orders.state==2 %}
+            {% set row="تم الارجاع" %}
+            {% endif %}
+          <td> {{ row }} </td>
+          <td>
+            <form method="post" action="/state">
+              <input type="hidden" name="order" value="{{Orders.id}}">
+                            <select class="form-select" name="state" aria-label="Default select example" onchange="this.form.submit()">
+                              <option value="0" >قيد التوصيل</option>
+                              <option value="1" >تم التوصيل</option>
+                              <option value="2" >تم الارجاع</option>
+
+                            </select>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+<a href="/main" class="btn btn-primary">رجوع</a>
+    <button class="btn btn-primary" onclick="display()">طباعة</button>
+      <script>
+         function display() {
+            window.print();
+         }
+      </script>
+{% endblock %}

@@ -1,7 +1,5 @@
-import json
-
 from flask import Flask, render_template, request, flash, url_for, redirect
-from models import setup_db, Client, Driver, Masareef, Orders
+from models import setup_db, Client, Driver, Masareef, Orders, Users
 from forms import AddClient, Search, AddDriver, AddMasrf, AddOrder
 
 app = Flask(__name__, template_folder='templates')
@@ -12,6 +10,21 @@ db = setup_db(app)
 @app.route('/', methods=['GET'])
 def login():
     return render_template('login.html')
+
+
+@app.route('/', methods=['POST'])
+def login_post():
+    user = request.form['user']
+    password = request.form['pass']
+    query = Users.query.all()
+    for record in query:
+        if user == record.username and password == record.password:
+            query = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
+                                                                    Driver.id == Orders.driver_id == record.driver_id
+                                                                    ).all()
+            form = Search()
+
+            return render_template('orderdr.html', query=query, form=form)
 
 
 @app.route('/main', methods=['GET'])
