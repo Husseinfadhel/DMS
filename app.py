@@ -9,6 +9,11 @@ app = Flask(__name__, template_folder='templates')
 db = setup_db(app)
 
 
+@app.route('/', methods=['GET'])
+def login():
+    return render_template('login.html')
+
+
 @app.route('/main', methods=['GET'])
 def main():
     return render_template('main.html')
@@ -157,14 +162,13 @@ def order_post():
     form = Search()
     filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
                                                             Driver.id == Orders.driver_id, db.or_(
-        Orders.invoice_num.like('%{}%'.format(search)),Client.name.like('%{}%'.format(search))
-    ))
+            Orders.invoice_num.like('%{}%'.format(search)), Client.name.like('%{}%'.format(search))
+        ))
     return render_template('order.html', query=filte, form=form)
 
 
 @app.route('/state', methods=['POST'])
 def state():
-
     change = Orders.query.get(request.form['order'])
     change.state = request.form['state']
     Orders.update(change)

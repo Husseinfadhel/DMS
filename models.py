@@ -18,23 +18,6 @@ def setup_db(app):
     return db
 
 
-class Users(db.Model):
-    __tablename__ = "Users"
-    id = Column(Integer, primary_key=True)
-    username = Column(String)
-    password = Column(Integer)
-    auth = Column(Integer)
-
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self):
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
 
 
 class Client(db.Model):
@@ -114,6 +97,26 @@ class Orders(db.Model):
     net_cost = Column(Integer)
     driver_id = Column(Integer, ForeignKey('Driver.id'))
     state = Column(Integer, default=0)
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
+class Users(db.Model):
+    __tablename__ = "Users"
+    id = Column(Integer, primary_key=True)
+    username = Column(String)
+    password = Column(Integer)
+    auth = Column(Integer)
+    drive = Column(Integer, ForeignKey('Driver.id'), nullable=True)
 
     def insert(self):
         db.session.add(self)
