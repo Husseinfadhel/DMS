@@ -115,7 +115,6 @@ class Users(db.Model):
     id = Column(Integer, primary_key=True)
     username = Column(String)
     password = Column(Integer)
-    auth = Column(Integer)
     drive = Column(Integer, ForeignKey('Driver.id'), nullable=True)
 
     def insert(self):

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, url_for, redirect
+from flask import Flask, render_template, request, flash, url_for, redirect, session
 from models import setup_db, Client, Driver, Masareef, Orders, Users
 from forms import AddClient, Search, AddDriver, AddMasrf, AddOrder
 
@@ -14,17 +14,40 @@ def login():
 
 @app.route('/', methods=['POST'])
 def login_post():
-    user = request.form['user']
-    password = request.form['pass']
+    user = str(request.form['user'])
+    password = int(request.form['pass'])
     query = Users.query.all()
     for record in query:
-        if user == record.username and password == record.password:
-            query = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
-                                                                    Driver.id == Orders.driver_id == record.driver_id
-                                                                    ).all()
-            form = Search()
+        if user == record.username and password == record.password and record.drive is not None:
+            driv = record.drive
+            return redirect(url_for("orderdr", driv=driv))
 
-            return render_template('orderdr.html', query=query, form=form)
+        elif user == record.username and password == record.password and record.drive is None:
+            print(record.drive)
+            return redirect(url_for('main'))
+    return redirect(url_for('login'))
+
+
+@app.route('/order/<int:driv>', methods=['GET', "POST"])
+def orderdr(driv):
+    if request.method == "GET":
+        query = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
+                                                                Orders.driver_id == Driver.id,
+                                                                Driver.id == driv
+                                                                ).all()
+        form = Search()
+        return render_template('orderdr.html', query=query, form=form)
+
+    elif request.method == "POST":
+        search = request.form['search']
+        form = Search()
+        filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
+                                                                Driver.id == Orders.driver_id, Driver.id == driv,
+                                                                db.or_(
+                                                                    Orders.invoice_num.like('%{}%'.format(search)),
+                                                                    Client.name.like('%{}%'.format(search))
+                                                                ))
+        return render_template('orderdr.html', query=filte, form=form)
 
 
 @app.route('/main', methods=['GET'])
@@ -161,6 +184,22 @@ def add_order_post():
     return redirect(url_for('main'))
 
 
+@app.route('/add/account', methods=['GET', 'POST'])
+def add_account():
+    if request.method == 'GET':
+        drivers = Driver.query.all()
+        return render_template("account.html", drivers=drivers)
+    elif request.method == 'POST':
+        drivor = int(request.form['driver'])
+        user = request.form['user']
+        password = int(request.form['pass'])
+        new = Users(username=user,
+                    password=password,
+                    drive=drivor)
+        Users.insert(new)
+        return redirect(url_for('main'))
+
+
 @app.route('/order', methods=['GET'])
 def order():
     query = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
@@ -186,6 +225,21 @@ def state():
     change.state = request.form['state']
     Orders.update(change)
     return redirect(url_for("order"))
+
+
+@app.route('/state2', methods=['POST'])
+def state2():
+    change = Orders.query.get(request.form['order'])
+    change.state = request.form['state']
+
+    Orders.update(change)
+    driver_id = request.form['driver']
+    query = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
+                                                            Orders.driver_id == driver_id
+                                                            ).all()
+    form = Search()
+
+    return render_template('orderdr.html', query=query, form=form)
 
 
 if __name__ == "__main__":
