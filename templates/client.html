@@ -17,6 +17,7 @@
         <th>اسم الزبون</th>
         <th>رقم الهاتف</th>
         <th>العنوان</th>
+        <th>اسم المحل </th>
       </tr>
     </thead>
     <tbody>
@@ -25,6 +26,13 @@
           <td>{{ record.name }}</td>
           <td>{{ record.phone }}</td>
           <td>{{ record.address }}</td>
+            <td>{{ record.shop }}  </td>
+          <td> <form method="post" action="/delete-client">
+              <input type="hidden" name="client" value="{{record.id}}">
+              <button type="submit" class="btn btn-primary">حذف</button>
+          </form>
+          </td>
+
         </tr>
       {% endfor %}
     </tbody>

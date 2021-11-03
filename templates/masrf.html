@@ -25,6 +25,13 @@
           <td>{{ record.reason }}</td>
           <td>{{ record.amount }}</td>
           <td>{{ record.date }}</td>
+         </td>
+          <td> <form method="post" action="/delete-masrf">
+              <input type="hidden" name="masrf" value="{{record.id}}">
+              <button type="submit" class="btn btn-primary">حذف</button>
+          </form>
+          </td>
+
         </tr>
       {% endfor %}
     </tbody>

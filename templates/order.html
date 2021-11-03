@@ -14,10 +14,13 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
-        <th>اسم الزبون</th>
+        <th>اسم العميل</th>
         <th>رقم الوصل</th>
         <th>العنوان</th>
         <th>رقم الهاتف</th>
+        <th> اسم الزبون</th>
+        <th> رقم الهاتف </th>
+        <th>عنوان الزبون </th>
         <th>المبلغ الكلي</th>
         <th>الربح الصافي</th>
         <th> اسم السائق</th>
@@ -33,6 +36,9 @@
           <td>{{ Orders.invoice_num }}</td>
           <td>{{ Client.address }}</td>
           <td>{{ Client.phone }}</td>
+          <td>{{ Orders.costumer }}</td>
+          <td>{{ Orders.costumer_phone }}</td>
+          <td>{{ Orders.costumer_add }}</td>
           <td>{{ Orders.total_cost}}</td>
           <td>{{ Orders.net_cost}}</td>
           <td>{{ Driver.name}}</td>
@@ -57,7 +63,14 @@
                             </select>
             </form>
           </td>
+         </td>
+          <td> <form method="post" action="/delete-order">
+              <input type="hidden" name="order" value="{{Orders.id}}">
+              <button type="submit" class="btn btn-primary">حذف</button>
+          </form>
+          </td>
         </tr>
+
       {% endfor %}
     </tbody>
   </table>

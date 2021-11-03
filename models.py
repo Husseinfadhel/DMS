@@ -18,12 +18,11 @@ def setup_db(app):
     return db
 
 
-
-
 class Client(db.Model):
     __tablename__ = "Client"
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
+    shop = Column(String)
     phone = Column(Integer)
     address = Column(String)
     order = db.relationship('Orders', backref=db.backref('client', uselist=False), lazy='dynamic')
@@ -92,6 +91,9 @@ class Orders(db.Model):
     id = Column(Integer, primary_key=True)
     invoice_num = Column(Integer)
     client_id = Column(Integer, ForeignKey('Client.id'))
+    costumer = Column(String)
+    costumer_add = Column(String)
+    costumer_phone = Column(Integer)
     date = Column(String)
     total_cost = Column(Integer)
     net_cost = Column(Integer)
@@ -115,6 +117,7 @@ class Users(db.Model):
     id = Column(Integer, primary_key=True)
     username = Column(String)
     password = Column(Integer)
+    entry = Column(Integer, default=0)
     drive = Column(Integer, ForeignKey('Driver.id'), nullable=True)
 
     def insert(self):

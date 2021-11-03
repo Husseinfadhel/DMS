@@ -22,9 +22,10 @@ def login_post():
             driv = record.drive
             return redirect(url_for("orderdr", driv=driv))
 
-        elif user == record.username and password == record.password and record.drive is None:
-            print(record.drive)
+        elif user == record.username and password == record.password and record.drive is None and record.entry is None:
             return redirect(url_for('main'))
+        elif user == record.username and password == record.password and record.entry == 0 and record.drive is None:
+            return redirect(url_for("add_order"))
     return redirect(url_for('login'))
 
 
@@ -66,7 +67,8 @@ def add_client_post():
     new = Client(
         name=request.form['name'],
         address=request.form['address'],
-        phone=request.form['phone']
+        phone=request.form['phone'],
+        shop=request.form['shop']
     )
     Client.insert(new)
     flash('العميل ' + request.form['name'] + ' تم أضافته بنجاح')
@@ -178,7 +180,10 @@ def add_order_post():
                  total_cost=request.form['total'],
                  net_cost=request.form['net'],
                  driver_id=request.form['driver'],
-                 date=request.form['date']
+                 date=request.form['date'],
+                 costumer=request.form['costumer'],
+                 costumer_add=request.form['costumer_add'],
+                 costumer_phone=request.form['costumer_phone']
                  )
     Orders.insert(new)
     return redirect(url_for('main'))
@@ -240,6 +245,35 @@ def state2():
     form = Search()
 
     return render_template('orderdr.html', query=query, form=form)
+
+
+@app.route("/delete-order", methods=["POST"])
+def delete_order():
+    order = Orders.query.get(request.form['order'])
+    Orders.delete(order)
+    return redirect(url_for("order"))
+
+
+@app.route("/delete-masrf", methods=["POST"])
+def delete_masrf():
+    masrf = Masareef.query.get(request.form['masrf'])
+    Masareef.delete(masrf)
+    return redirect(url_for("masrf"))
+
+
+@app.route("/delete-driver", methods=["POST"])
+def delete_driver():
+    driv = Driver.query.get(request.form['driver'])
+    Driver.delete(driv)
+    return redirect(url_for('driver'))
+
+
+@app.route("/delete-client", methods=["POST"])
+def delete_client():
+    cli = Client.query.get(request.form['client'])
+    Client.delete(cli)
+
+    return redirect(url_for("client"))
 
 
 if __name__ == "__main__":

@@ -25,6 +25,11 @@
           <td>{{ record.name }}</td>
           <td>{{ record.phone }}</td>
           <td>{{ record.card_no }}</td>
+          <td> <form method="post" action="/delete-driver">
+              <input type="hidden" name="driver" value="{{record.id}}">
+              <button type="submit" class="btn btn-primary">حذف</button>
+          </form>
+          </td>
         </tr>
       {% endfor %}
     </tbody>
