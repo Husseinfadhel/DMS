@@ -1,7 +1,7 @@
-from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, TIMESTAMP
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
+from datetime import date, datetime
 db = SQLAlchemy()
 
 '''
@@ -94,7 +94,7 @@ class Orders(db.Model):
     costumer = Column(String)
     costumer_add = Column(String)
     costumer_phone = Column(Integer)
-    date = Column(String)
+    date = Column(TIMESTAMP())
     total_cost = Column(Integer)
     net_cost = Column(Integer)
     driver_id = Column(Integer, ForeignKey('Driver.id'))

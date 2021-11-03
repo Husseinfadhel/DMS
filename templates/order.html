@@ -2,9 +2,13 @@
 
 {% block content %}
 <form method="post" class="form">
-<div class="form-group">
+<div class="input-group input-group-sm mb-3" style="padding: 5px;">
             <label name="query" >بحث</label>
               {{ form.search(class_ = 'form-control', autofocus = true) }}
+    </label > من </label>
+    <input type="text" name="h1"class="form-control">
+    <label>الى </label>
+        <input type="text" name="h2"class="form-control">
 
     </div>
   <input type="submit" value="بحث" class="btn btn-outline-primary">
