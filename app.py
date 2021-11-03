@@ -229,7 +229,6 @@ def order_post():
     if len(request.form['h1']) > 1 and len(request.form['h2']) > 1:
         # h1 = h1.split('-')
         # h2 = h2.split('-')
-        print(h1)
         # h1 = date(year=int(h1[0]), month=int(h1[1]), day=int(h1[2]))
         # h2 = date(year=int(h2[0]), month=int(h2[1]), day=int(h2[2]))
 
