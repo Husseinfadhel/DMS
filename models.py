@@ -94,7 +94,7 @@ class Orders(db.Model):
     costumer = Column(String)
     costumer_add = Column(String)
     costumer_phone = Column(Integer)
-    date = Column(TIMESTAMP())
+    date = Column(String)
     total_cost = Column(Integer)
     net_cost = Column(Integer)
     driver_id = Column(Integer, ForeignKey('Driver.id'))

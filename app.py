@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, flash, url_for, redirect
 from models import setup_db, Client, Driver, Masareef, Orders, Users
 from forms import AddClient, Search, AddDriver, AddMasrf, AddOrder
 from datetime import date
+
 app = Flask(__name__, template_folder='templates')
 
 db = setup_db(app)
@@ -177,18 +178,16 @@ def add_order_post():
     record = Client.query.filter_by(name=request.form['client']).first()
     h = request.form['date']
     hf = h.split('-')
-    print(hf)
     yr = int(hf[0])
     m = int(hf[1])
     dy = int(hf[2])
-    print(yr)
     hf = date(year=yr, month=m, day=dy)
     new = Orders(invoice_num=request.form['invoice_num'],
                  client_id=record.id,
                  total_cost=request.form['total'],
                  net_cost=request.form['net'],
                  driver_id=request.form['driver'],
-                 date=hf,
+                 date=h,
                  costumer=request.form['costumer'],
                  costumer_add=request.form['costumer_add'],
                  costumer_phone=request.form['costumer_phone']
@@ -226,21 +225,29 @@ def order_post():
     search = request.form['search']
     h1 = str(request.form['h1'])
     h2 = str(request.form['h2'])
-    print(type(h1))
-    if request.form['h1'] != "" and request.form['h2'] != "":
-        h1 = h1.split('-')
-        h2 = h2.split('-')
-        h1 = date(year=int(h1[0]), month=int(h1[1]), day=int(h1[2]))
-        h2 = date(year=int(h2[0]), month=int(h2[1]), day=int(h2[2]))
-
     form = Search()
+    if len(request.form['h1']) > 1 and len(request.form['h2']) > 1:
+        # h1 = h1.split('-')
+        # h2 = h2.split('-')
+        print(h1)
+        # h1 = date(year=int(h1[0]), month=int(h1[1]), day=int(h1[2]))
+        # h2 = date(year=int(h2[0]), month=int(h2[1]), day=int(h2[2]))
 
-    filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
-                                                            Driver.id == Orders.driver_id, db.or_(
-            Orders.invoice_num.like('%{}%'.format(search)), Client.name.like('%{}%'.format(search)), db.and_(
-                Orders.date >= h1,   Orders.date <= h2)
-        ))
-    return render_template('order.html', query=filte, form=form)
+        filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
+                                                                Driver.id == Orders.driver_id, db.or_(
+                Orders.invoice_num.like('%{}%'.format(search)), db.and_(
+                    Orders.date >= h1, Orders.date <= h2, Client.name.like('%{}%'.format(search)))
+            ))
+        return render_template('order.html', query=filte, form=form)
+
+    else:
+        filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
+                                                                Driver.id == Orders.driver_id, db.or_(
+                Orders.invoice_num.like('%{}%'.format(search)), Client.name.like('%{}%'.format(search))
+            ))
+        return render_template('order.html', query=filte, form=form)
+
+    return redirect(url_for('order'))
 
 
 @app.route('/state', methods=['POST'])
