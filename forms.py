@@ -22,11 +22,9 @@ class AddDriver(FlaskForm):
 class AddMasrf(FlaskForm):
     reason = StringField("name", validators=[DataRequired()])
     amount = StringField("phone", validators=[DataRequired()])
-    date = StringField("card_no", validators=[DataRequired()])
 
 
 class AddOrder(FlaskForm):
     invoice_num = StringField(validators=[DataRequired()])
     total = StringField(validators=[DataRequired()])
     net = StringField(validators=[DataRequired()])
-    date = StringField(validators=[DataRequired()])

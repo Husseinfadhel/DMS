@@ -5,12 +5,18 @@
 <div class="form-group">
             <label name="query" >بحث</label>
               {{ form.search(class_ = 'form-control', autofocus = true) }}
-
+ </label > من </label>
+    <input type="date" name="h1"class="form-control">
+    <label>الى </label>
+        <input type="date" name="h2"class="form-control">
     </div>
   <input type="submit" value="بحث" class="btn btn-outline-primary">
 
 </form>
-
+<div class="input-group input-group-sm mb-3" style="padding: 15px;">
+ <label style="background-color: gray; color:white; padding-right: 8px;"> المبلغ الاجمالي : </label>
+     <label style="background-color: gray; color:white;padding-right: 5px;"> {{ num }} </label>
+</div>
   <table id="data" class="table table-striped">
     <thead>
       <tr>

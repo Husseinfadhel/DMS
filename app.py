@@ -133,6 +133,7 @@ def driver_post():
 @app.route('/add/masrf', methods=['GET'])
 def add_masrf():
     masrf = AddMasrf()
+
     return render_template('addmasaref.html', form=masrf)
 
 
@@ -150,19 +151,39 @@ def add_masrf_post():
 def masrf():
     query = Masareef.query.all()
     form = Search()
-    return render_template('masrf.html', query=query, form=form)
+    num = 0
+    for ll in query:
+        num += ll.amount
+    return render_template('masrf.html', query=query, form=form, num=num)
 
 
 @app.route('/masrf', methods=['POST'])
 def masrf_post():
     search = request.form['search']
     form = Search()
-    filte = Masareef.query.filter(db.or_(
-        Masareef.reason.like('%{}%'.format(search)),
-        Masareef.amount.like('%{}%'.format(search)),
-        Masareef.date.like('%{}%'.format(search))
-    ))
-    return render_template('masrf.html', query=filte, form=form)
+    h1 = request.form['h1']
+    h2 = request.form['h2']
+    if len(h1) > 1 and len(h2) > 1:
+
+        filte = Masareef.query.filter(db.or_(
+            Masareef.reason.like('%{}%'.format(search)),
+            Masareef.amount.like('%{}%'.format(search)),
+            Masareef.date.like('%{}%'.format(search))), db.and_(Masareef.date >= h1, Masareef.date <= h2)
+        )
+        num = 0
+        for ll in filte:
+            num += ll.amount
+        return render_template('masrf.html', query=filte, form=form, num=num)
+    else:
+        filte = Masareef.query.filter(db.or_(
+            Masareef.reason.like('%{}%'.format(search)),
+            Masareef.amount.like('%{}%'.format(search)),
+            Masareef.date.like('%{}%'.format(search))
+        ))
+        num = 0
+        for ll in filte:
+            num += ll.amount
+        return render_template('masrf.html', query=filte, form=form, num=num)
 
 
 @app.route('/add/order', methods=['GET'])
@@ -217,7 +238,12 @@ def order():
     query = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
                                                             Driver.id == Orders.driver_id).all()
     form = Search()
-    return render_template('order.html', query=query, form=form)
+    num = 0
+    net = 0
+    for to, t, z in query:
+        num += to.total_cost
+        net += to.net_cost
+    return render_template('order.html', query=query, form=form, num=num, net=net)
 
 
 @app.route('/order', methods=['POST'])
@@ -234,17 +260,27 @@ def order_post():
 
         filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
                                                                 Driver.id == Orders.driver_id, db.or_(
-                Orders.invoice_num.like('%{}%'.format(search)), db.and_(
-                    Orders.date >= h1, Orders.date <= h2, Client.name.like('%{}%'.format(search)))
-            ))
-        return render_template('order.html', query=filte, form=form)
+                Orders.invoice_num.like('%{}%'.format(search)), Client.name.like('%{}%'.format(search))), db.and_(
+                Orders.date >= h1, Orders.date <= h2))
+
+        num = 0
+        net = 0
+        for to, t, z in filte:
+            num += to.total_cost
+            net += to.net_cost
+        return render_template('order.html', query=filte, form=form, num=num, net=net)
 
     else:
         filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
                                                                 Driver.id == Orders.driver_id, db.or_(
                 Orders.invoice_num.like('%{}%'.format(search)), Client.name.like('%{}%'.format(search))
             ))
-        return render_template('order.html', query=filte, form=form)
+        num = 0
+        net = 0
+        for to, t, z in filte:
+            num += to.total_cost
+            net += to.net_cost
+        return render_template('order.html', query=filte, form=form, num=num, net=net)
 
     return redirect(url_for('order'))
 
