@@ -23,7 +23,7 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
-        <th>اسم العميل</th>
+        <th>اسم المحل</th>
         <th>رقم الوصل</th>
         <th>العنوان</th>
         <th>رقم الهاتف</th>
@@ -41,7 +41,7 @@
     <tbody>
       {% for Orders, Driver, Client in query %}
         <tr>
-          <td>{{ Client.name }}</td>
+          <td>{{ Client.shop }}</td>
           <td>{{ Orders.invoice_num }}</td>
           <td>{{ Client.address }}</td>
           <td>{{ Client.phone }}</td>

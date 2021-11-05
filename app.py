@@ -240,9 +240,11 @@ def order():
     form = Search()
     num = 0
     net = 0
+
     for to, t, z in query:
-        num += to.total_cost
-        net += to.net_cost
+        if to.state == 1:
+            num += to.total_cost
+            net += to.net_cost
     return render_template('order.html', query=query, form=form, num=num, net=net)
 
 
@@ -260,26 +262,30 @@ def order_post():
 
         filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
                                                                 Driver.id == Orders.driver_id, db.or_(
-                Orders.invoice_num.like('%{}%'.format(search)), Client.name.like('%{}%'.format(search))), db.and_(
+                Orders.invoice_num.like('%{}%'.format(search)), Client.shop.like('%{}%'.format(search)),
+                Driver.name.like('%{}%'.format(search))), db.and_(
                 Orders.date >= h1, Orders.date <= h2))
 
         num = 0
         net = 0
         for to, t, z in filte:
-            num += to.total_cost
-            net += to.net_cost
+            if to.state == 1:
+                num += to.total_cost
+                net += to.net_cost
         return render_template('order.html', query=filte, form=form, num=num, net=net)
 
     else:
         filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
                                                                 Driver.id == Orders.driver_id, db.or_(
-                Orders.invoice_num.like('%{}%'.format(search)), Client.name.like('%{}%'.format(search))
+                Orders.invoice_num.like('%{}%'.format(search)), Client.shop.like('%{}%'.format(search)),
+                Driver.name.like('%{}%'.format(search))
             ))
         num = 0
         net = 0
         for to, t, z in filte:
-            num += to.total_cost
-            net += to.net_cost
+            if to.state == 1:
+                num += to.total_cost
+                net += to.net_cost
         return render_template('order.html', query=filte, form=form, num=num, net=net)
 
     return redirect(url_for('order'))
