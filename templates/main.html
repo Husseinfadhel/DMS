@@ -1,48 +1,69 @@
 {% extends "base.html" %}
 {% block content %}
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/main">القطار الابيض</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            العملاء
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/client">جميع العملاء</a></li>
+            <li><a class="dropdown-item" href="/add/client">اضافة عميل</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            السائقين
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/driver">جميع السائقين</a></li>
+            <li><a class="dropdown-item" href="/add/driver">اضافة سائق</a></li>
+            <li><a class="dropdown-item" href="/add/account">حساب سائق</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            المصاريف
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/masrf">جميع المصاريف</a></li>
+            <li><a class="dropdown-item" href="/add/masrf">اضافة مصروف</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            الطلبيات
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/order">جميع الطلبيات</a></li>
+            <li><a class="dropdown-item" href="/add/order">اضافة طلبية</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 <div class="flex-container">
 <div class="justify-content-center">
     <div class="row align-items-center">
-<div class="card-group">
-<div class="card" style="width: 14rem;">
-  <img src="../static/images/cleints.jpg" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">العملاء</h5>
-    <a href="/client" class="btn btn-primary">عرض العملاء</a>
-    <a href="/add/client" class="btn btn-primary">أضافة عميل</a>
-</div>
-</div>
-
-          <div class="card" style="width: 14rem;">
-  <img src="../static/images/delivery.jpg" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">السائقين</h5>
-    <a href="/driver" class="btn btn-primary">عرض</a>
-    <a href="/add/driver" class="btn btn-primary">أضافة سائق</a>
-    <a href="/add/account" class="btn btn-primary">أضافة حساب</a>
-
-          </div>
-          </div>
-            <div class="card" style="width: 14rem;">
-  <img src="../static/images/psd.jpg" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">المصاريف</h5>
-    <a href="/masrf" class="btn btn-primary">عرض </a>
-    <a href="/add/masrf" class="btn btn-primary">أضافة مصروف</a>
-</div>
-            </div>
-            <div class="card" style="width: 14rem;">
-  <img src="../static/images/casa.jpg" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">الطلبيات</h5>
-    <a href="/order" class="btn btn-primary">عرض </a>
-    <a href="/add/order" class="btn btn-primary">أضافة طلبية</a>
-              </div>
-                  </div>
+      <br>
+      <br>
+      <div class="col"></div>
+      <div class="col">
+        <img src="../static/images/logonew.png" class="rounded float-start" alt="..." style="padding-top: 60px;">
+      </div>
+      <div class="col"></div>
 </div>
     </div>
-</div>
-</div>
 </div>
 {% endblock %}

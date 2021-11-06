@@ -17,6 +17,58 @@
 {% endblock %}
 
 {% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/main">القطار الابيض</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              العملاء
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/client">جميع العملاء</a></li>
+              <li><a class="dropdown-item" href="/add/client">اضافة عميل</a></li>
+            </ul>
+          </li>
+  
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              السائقين
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/driver">جميع السائقين</a></li>
+              <li><a class="dropdown-item" href="/add/driver">اضافة سائق</a></li>
+              <li><a class="dropdown-item" href="/add/account">حساب سائق</a></li>
+            </ul>
+          </li>
+  
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              المصاريف
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/masrf">جميع المصاريف</a></li>
+              <li><a class="dropdown-item" href="/add/masrf">اضافة مصروف</a></li>
+            </ul>
+          </li>
+  
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              الطلبيات
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/order">جميع الطلبيات</a></li>
+              <li><a class="dropdown-item" href="/add/order">اضافة طلبية</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
     <div class="flex-container">
 <div class="justify-content-center">
     <div class="row align-items-center">
@@ -24,7 +76,6 @@
 
   <form method="post" class="form">
               <h3 class="form-heading">أضافة سائق جديد</h3>
-      <img src="../static/images/delivery.jpg" class="rounded mx-auto d-block" alt="...">
 <div class="form-group">
             <label for="name">أسم السائق</label>
             {{ form.name(class_ = 'form-control', autofocus = true) }}

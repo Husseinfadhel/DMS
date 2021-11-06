@@ -1,6 +1,59 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div id="all" style="visibility: visible">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/main">القطار الابيض</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            العملاء
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/client">جميع العملاء</a></li>
+            <li><a class="dropdown-item" href="/add/client">اضافة عميل</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            السائقين
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/driver">جميع السائقين</a></li>
+            <li><a class="dropdown-item" href="/add/driver">اضافة سائق</a></li>
+            <li><a class="dropdown-item" href="/add/account">حساب سائق</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            المصاريف
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/masrf">جميع المصاريف</a></li>
+            <li><a class="dropdown-item" href="/add/masrf">اضافة مصروف</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            الطلبيات
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/order">جميع الطلبيات</a></li>
+            <li><a class="dropdown-item" href="/add/order">اضافة طلبية</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 <form method="post" class="form">
 <div class="input-group input-group-sm mb-3" style="padding: 5px;">
             <label name="query" >بحث</label>
@@ -17,7 +70,7 @@
 <div class="input-group input-group-sm mb-3" style="padding: 15px;">
  <label style="background-color: gray; color:white; padding-right: 8px;"> المبلغ الاجمالي : </label>
      <label style="background-color: gray; color:white;padding-right: 5px;"> {{ num }} </label>
- <label style="background-color: gray; color:white; padding-right: 15px;"> الربح الصافي : </label>
+ <label style="background-color: gray; color:white; padding-right: 15px;"> كلفة التوصيل : </label>
  <label style="background-color: gray; color:white;padding-right: 5px;"> {{ net }} </label>
 </div>
   <table id="data" class="table table-striped">
@@ -31,7 +84,7 @@
         <th> رقم الهاتف </th>
         <th>عنوان الزبون </th>
         <th>المبلغ الكلي</th>
-        <th>الربح الصافي</th>
+        <th>كلفة التوصيل</th>
         <th> اسم السائق</th>
         <th> التاريخ </th>
         <th> الحالة </th>
@@ -83,11 +136,96 @@
       {% endfor %}
     </tbody>
   </table>
+  <div id="none">
 <a href="/main" class="btn btn-primary">رجوع</a>
-    <button class="btn btn-primary" onclick="display()">طباعة</button>
-      <script>
-         function display() {
-            window.print();
-         }
+    <button class="btn btn-primary" onclick="printDiv()">طباعة</button>
+    </div>
+</div>
+
+
+    <div id="printable" style="visibility: hidden;">
+            <div class="row align-items-center">
+              <br>
+              <br>
+              <div class="col">
+                <h1>القطار الابيض</h1>
+                <h3>للتوصيل السريع</h3>
+              </div>
+              <div class="col">
+                <h5 style="text-align: center;">كشف حساب</h5>
+              </div>
+              <div class="col" style="text-align: left;">
+                <img src="../static/images/logonew.png" class="rounded" alt="..."  width="150 px" height="150 px" style="text-align: left;">
+              </div>
+        </div>
+        <div style="padding-top: 25px;">
+          <label name="query" >اسم العميل:</label>
+              {{ form.search(class_ = 'form-control', autofocus = true) }}
+             <table id="data" class="table table-striped">
+               <thead>
+                 <tr>
+                   <th>اسم المحل</th>
+                   <th>رقم الوصل</th>
+                   <th>العنوان</th>
+                   <th>رقم الهاتف</th>
+                   <th> اسم الزبون</th>
+                   <th> رقم الهاتف </th>
+                   <th>عنوان الزبون </th>
+                   <th>المبلغ الكلي</th>
+                   <th>كلفة التوصيل</th>
+                   <th> اسم السائق</th>
+                   <th> التاريخ </th>
+                   <th> الحالة </th>
+                 </tr>
+               </thead>
+               <tbody>
+                 {% for Orders, Driver, Client in query %}
+                   <tr>
+                     <td>{{ Client.shop }}</td>
+                     <td>{{ Orders.invoice_num }}</td>
+                     <td>{{ Client.address }}</td>
+                     <td>{{ Client.phone }}</td>
+                     <td>{{ Orders.costumer }}</td>
+                     <td>{{ Orders.costumer_phone }}</td>
+                     <td>{{ Orders.costumer_add }}</td>
+                     <td>{{ Orders.total_cost}}</td>
+                     <td>{{ Orders.net_cost}}</td>
+                     <td>{{ Driver.name}}</td>
+                     <td>{{ Orders.date}}</td>
+                     {% if Orders.state==0 %}
+           
+                       {% set row="قيد التوصيل" %}
+                       {% elif Orders.state==1 %}
+                       {% set row="تم التوصيل" %}
+                       {% elif Orders.state==2 %}
+                       {% set row="تم الارجاع" %}
+                       {% endif %}
+                     <td> {{ row }} </td>
+                    </tr>
+
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <br>
+                <div style="padding: 15px;">
+                  <label style="color:rgb(0, 0, 0); padding-right: 8px;font-size: 30px;"> المبلغ الاجمالي : </label>
+                      <label style="color:rgb(0, 0, 0);padding-right: 5px;font-size: 30px;"> {{ num }} </label>
+                  <label style="color:rgb(0, 0, 0); padding-right: 15px;font-size: 30px;"> كلفة التوصيل : </label>
+                  <label style="color:rgb(0, 0, 0);padding-right: 5px;;font-size: 30px;"> {{ net }} </label>
+                 </div>
+        </div>
+    </div>
+
+
+
+<script>
+        function printDiv() { 
+        let specific_element = document.getElementById("printable").innerHTML;
+        let original_elements = document.body.innerHTML;
+    
+        document.body.innerHTML = specific_element;
+        window.print();
+        document.body.innerHTML = original_elements;
+    }
       </script>
 {% endblock %}
