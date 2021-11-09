@@ -28,7 +28,7 @@
   <form method="post" class="form">
               <h3 class="form-heading">أضافة طلبية جديدة </h3>
 <div class="form-group">
-             <label for="client">اسم العميل </label>
+             <label for="client"> اسم المحل </label>
   <input name = "client" type="text" id="autoComplete" class="form-control">
 
     </div>
@@ -42,11 +42,11 @@
   <input name = "date" type="date" class="form-control">
     </div>
             <div class="form-group">
-            <label for="total">المبلغ الكلي</label>
+            <label for="total">المبلغ الكلي (شامل كلفة التوصيل)</label>
             {{ form.total(class_ = 'form-control') }}
     </div>
             <div class="form-group">
-            <label for="net">صافي الربح</label>
+            <label for="net">كلفة التوصيل</label>
             {{ form.net(class_ = 'form-control') }}
     </div>
   <div class="form-group">
@@ -88,11 +88,11 @@
 
     <script>
         function search(){const autoCompleteJS = new autoComplete({
-            placeHolder: "البحث عن عميل ....",
+            placeHolder: "البحث عن اسم المحل ....",
             data: {
                 src:[{% for record in clients %}
 
-          "{{ record.name }}",
+          "{{ record.shop }}",
 
       {% endfor %}
     ],

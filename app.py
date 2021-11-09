@@ -196,13 +196,9 @@ def add_order():
 
 @app.route('/add/order', methods=['POST'])
 def add_order_post():
-    record = Client.query.filter_by(name=request.form['client']).first()
+    record = Client.query.filter_by(shop=request.form['client']).first()
+
     h = request.form['date']
-    hf = h.split('-')
-    yr = int(hf[0])
-    m = int(hf[1])
-    dy = int(hf[2])
-    hf = date(year=yr, month=m, day=dy)
     new = Orders(invoice_num=request.form['invoice_num'],
                  client_id=record.id,
                  total_cost=request.form['total'],
@@ -214,7 +210,7 @@ def add_order_post():
                  costumer_phone=request.form['costumer_phone']
                  )
     Orders.insert(new)
-    return redirect(url_for('main'))
+    return redirect(url_for('add_order'))
 
 
 @app.route('/add/account', methods=['GET', 'POST'])
