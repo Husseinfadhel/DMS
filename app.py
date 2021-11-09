@@ -199,6 +199,7 @@ def add_order_post():
     record = Client.query.filter_by(shop=request.form['client']).first()
 
     h = request.form['date']
+    note = request.form['note']
     new = Orders(invoice_num=request.form['invoice_num'],
                  client_id=record.id,
                  total_cost=request.form['total'],
@@ -207,7 +208,8 @@ def add_order_post():
                  date=h,
                  costumer=request.form['costumer'],
                  costumer_add=request.form['costumer_add'],
-                 costumer_phone=request.form['costumer_phone']
+                 costumer_phone=request.form['costumer_phone'],
+                 notes=note
                  )
     Orders.insert(new)
     return redirect(url_for('add_order'))
@@ -295,6 +297,14 @@ def state():
     return redirect(url_for("order"))
 
 
+@app.route('/payment', methods=['POST'])
+def payment():
+    change = Orders.query.get(request.form['py'])
+    change.payment_state = request.form['payment']
+    Orders.update(change)
+    return redirect(url_for("order"))
+
+
 @app.route('/state2', methods=['POST'])
 def state2():
     change = Orders.query.get(request.form['order'])
@@ -341,4 +351,3 @@ def delete_client():
 
 if __name__ == "__main__":
     app.run(debug=False)
-

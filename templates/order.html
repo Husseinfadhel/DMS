@@ -89,6 +89,9 @@
         <th> التاريخ </th>
         <th> الحالة </th>
         <th> تغيير الحالية </th>
+          <th> ملاحظة </th>
+          <th> حالة الدفع </th>
+          <th> تغيير حالة الدفع </th>
       </tr>
     </thead>
     <tbody>
@@ -118,6 +121,7 @@
             <form method="post" action="/state">
               <input type="hidden" name="order" value="{{Orders.id}}">
                             <select class="form-select" name="state" aria-label="Default select example" onchange="this.form.submit()">
+                                <option selected> أختار </option>
                               <option value="0" >قيد التوصيل</option>
                               <option value="1" >تم التوصيل</option>
                               <option value="2" >تم الارجاع</option>
@@ -125,7 +129,24 @@
                             </select>
             </form>
           </td>
-         </td>
+
+            <td> {{ Orders.note }} </td>
+            {% if Orders.payment_state == 0 %}
+             {% set payment="لم يتم الدفع" %}
+            {% elif Orders.payment_state == 1 %}
+             {% set payment="تم الدفع" %}
+             {% endif %}
+        <td> {{ payment }}</td>
+        <td>
+            <form method="post" action="/payment">
+              <input type="hidden" name="py" value="{{Orders.id}}">
+                            <select class="form-select" name="payment" aria-label="Default select example" onchange="this.form.submit()">
+                              <option selected> أختار </option>
+                              <option value="0" >لم يتم التسديد</option>
+                              <option value="1" >تم التسديد</option>
+                            </select>
+            </form>
+          </td>
           <td> <form method="post" action="/delete-order">
               <input type="hidden" name="order" value="{{Orders.id}}">
               <button type="submit" class="btn btn-primary">حذف</button>

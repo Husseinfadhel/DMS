@@ -99,6 +99,8 @@ class Orders(db.Model):
     net_cost = Column(Integer)
     driver_id = Column(Integer, ForeignKey('Driver.id'))
     state = Column(Integer, default=0)
+    payment_state = Column(Integer, default=0)
+    notes = Column(String)
 
     def insert(self):
         db.session.add(self)
