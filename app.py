@@ -240,7 +240,7 @@ def order():
     net = 0
 
     for to, t, z in query:
-        if to.state == 1:
+        if to.state == 1 and to.payment_state == 0:
             num += to.total_cost
             net += to.net_cost
     return render_template('order.html', query=query, form=form, num=num, net=net)
@@ -267,24 +267,52 @@ def order_post():
         num = 0
         net = 0
         for to, t, z in filte:
-            if to.state == 1:
+            if to.state == 1 and to.payment_state == 0:
                 num += to.total_cost
                 net += to.net_cost
         return render_template('order.html', query=filte, form=form, num=num, net=net)
-
     else:
         filte = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
-                                                                Driver.id == Orders.driver_id, db.or_(
+                                                                Driver.id == Orders.driver_id,
+                                                                Orders.payment_state == 0, db.or_(
                 Orders.invoice_num.like('%{}%'.format(search)), Client.shop.like('%{}%'.format(search)),
                 Driver.name.like('%{}%'.format(search))
             ))
         num = 0
         net = 0
         for to, t, z in filte:
-            if to.state == 1:
+            if to.state == 1 and to.payment_state == 0:
                 num += to.total_cost
                 net += to.net_cost
         return render_template('order.html', query=filte, form=form, num=num, net=net)
+
+    return redirect(url_for('order'))
+
+
+@app.route('/edit-order', methods=['POST'])
+def edit_order():
+    orde = request.form['order']
+    query = Orders.query.get(orde)
+    client = Client.query.get(query.client_id)
+    drivers = Driver.query.all()
+    return render_template('editorder.html', query=query, drivers=drivers, client=client)
+
+
+@app.route('/edit', methods=['POST'])
+def edit():
+    orde = request.form['id']
+    query = Orders.query.get(orde)
+    client = Client.query.filter(shop=request.form['client'])
+    query.client_id = client.id
+    query.invoice_num = request.form['invoice_num']
+    query.costumer = request.form['costumer']
+    query.costumer_phone = request.form['costumer_phone']
+    query.costumer_add = request.form['costumer_add']
+    query.date = request.form['date']
+    query.total_cost = request.form['total']
+    query.net_cost = request.form['net']
+    query.driver_id = request.form['driver']
+    Orders.update(query)
 
     return redirect(url_for('order'))
 
@@ -299,9 +327,11 @@ def state():
 
 @app.route('/payment', methods=['POST'])
 def payment():
-    change = Orders.query.get(request.form['py'])
-    change.payment_state = request.form['payment']
-    Orders.update(change)
+    change = Orders.query.filter(Orders.client_id == int(request.form['py']))
+    for record in change:
+        if record.state == 1:
+            record.payment_state = request.form['payment']
+            Orders.update(record)
     return redirect(url_for("order"))
 
 
@@ -350,4 +380,4 @@ def delete_client():
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)

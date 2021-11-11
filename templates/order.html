@@ -59,24 +59,26 @@
             <label name="query" >بحث</label>
               {{ form.search(class_ = 'form-control', autofocus = true) }}
     </label > من </label>
-    <input type="date" name="h1"class="form-control">
+    <input type="date" name="h1" class="form-control">
     <label>الى </label>
-        <input type="date" name="h2"class="form-control">
+        <input type="date" name="h2" class="form-control">
 
     </div>
   <input type="submit" value="بحث" class="btn btn-outline-primary">
 
 </form>
 <div class="input-group input-group-sm mb-3" style="padding: 15px;">
- <label style="background-color: gray; color:white; padding-right: 8px;"> المبلغ الاجمالي : </label>
+ <label style="background-color: gray; color:white; padding-right: 8px;"> المبلغ الاجمالي (غير شامل المدفوع): </label>
      <label style="background-color: gray; color:white;padding-right: 5px;"> {{ num }} </label>
- <label style="background-color: gray; color:white; padding-right: 15px;"> كلفة التوصيل : </label>
+ <label style="background-color: gray; color:white; padding-right: 15px;"> كلفة التوصيل (غير شامل المدفوع) :  </label>
  <label style="background-color: gray; color:white;padding-right: 5px;"> {{ net }} </label>
 </div>
   <table id="data" class="table table-striped">
     <thead>
       <tr>
         <th>اسم المحل</th>
+                    <th> حالة الدفع </th>
+          <th> تغيير حالة الدفع </th>
         <th>رقم الوصل</th>
         <th>العنوان</th>
         <th>رقم الهاتف</th>
@@ -90,14 +92,29 @@
         <th> الحالة </th>
         <th> تغيير الحالية </th>
           <th> ملاحظة </th>
-          <th> حالة الدفع </th>
-          <th> تغيير حالة الدفع </th>
+
       </tr>
     </thead>
     <tbody>
       {% for Orders, Driver, Client in query %}
         <tr>
           <td>{{ Client.shop }}</td>
+          {% if Orders.payment_state == 0 %}
+             {% set payment="لم يتم الدفع" %}
+            {% elif Orders.payment_state == 1 %}
+             {% set payment="تم الدفع" %}
+             {% endif %}
+        <td> {{ payment }}</td>
+        <td>
+            <form method="post" action="/payment">
+              <input type="hidden" name="py" value="{{Client.id}}">
+                            <select class="form-select" name="payment" aria-label="Default select example" onchange="this.form.submit()">
+                              <option selected> أختار </option>
+                              <option value="0" >لم يتم التسديد</option>
+                              <option value="1" >تم التسديد</option>
+                            </select>
+            </form>
+          </td>
           <td>{{ Orders.invoice_num }}</td>
           <td>{{ Client.address }}</td>
           <td>{{ Client.phone }}</td>
@@ -131,21 +148,11 @@
           </td>
 
             <td> {{ Orders.note }} </td>
-            {% if Orders.payment_state == 0 %}
-             {% set payment="لم يتم الدفع" %}
-            {% elif Orders.payment_state == 1 %}
-             {% set payment="تم الدفع" %}
-             {% endif %}
-        <td> {{ payment }}</td>
-        <td>
-            <form method="post" action="/payment">
-              <input type="hidden" name="py" value="{{Orders.id}}">
-                            <select class="form-select" name="payment" aria-label="Default select example" onchange="this.form.submit()">
-                              <option selected> أختار </option>
-                              <option value="0" >لم يتم التسديد</option>
-                              <option value="1" >تم التسديد</option>
-                            </select>
-            </form>
+          <td>
+              <form method="post" action="/edit-order">
+                  <input type="hidden" name="order" value="{{ Orders.id }}">
+                  <button type="submit" class="btn btn-primary"> تعديل </button>
+              </form>
           </td>
           <td> <form method="post" action="/delete-order">
               <input type="hidden" name="order" value="{{Orders.id}}">
@@ -229,9 +236,9 @@
                 </table>
                 <br>
                 <div style="padding: 15px;">
-                  <label style="color:rgb(0, 0, 0); padding-right: 8px;font-size: 30px;"> المبلغ الاجمالي : </label>
+                  <label style="color:rgb(0, 0, 0); padding-right: 8px;font-size: 30px;"> المبلغ الاجمالي (غير شامل المدفوع): </label>
                       <label style="color:rgb(0, 0, 0);padding-right: 5px;font-size: 30px;"> {{ num }} </label>
-                  <label style="color:rgb(0, 0, 0); padding-right: 15px;font-size: 30px;"> كلفة التوصيل : </label>
+                  <label style="color:rgb(0, 0, 0); padding-right: 15px;font-size: 30px;"> كلفة التوصيل (غير شامل المدفوع) : </label>
                   <label style="color:rgb(0, 0, 0);padding-right: 5px;;font-size: 30px;"> {{ net }} </label>
                  </div>
         </div>
