@@ -66,25 +66,39 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
+        <th>التسلسل</th>
         <th>اسم الزبون</th>
         <th>رقم الهاتف</th>
         <th>العنوان</th>
         <th>اسم المحل </th>
+        <th> كشف حساب</th>
+        <th> تم الدفع</th>
       </tr>
     </thead>
     <tbody>
       {% for record in query %}
         <tr>
+            <td></td>
           <td>{{ record.name }}</td>
           <td>{{ record.phone }}</td>
           <td>{{ record.address }}</td>
             <td>{{ record.shop }}  </td>
-          <td> <form method="post" action="/delete-client">
-              <input type="hidden" name="client" value="{{record.id}}">
-              <button type="submit" class="btn btn-primary">حذف</button>
-          </form>
-          </td>
 
+        <td>  <form method="post" action="/kashf">
+          <input type="hidden" name="py" value="{{record.id}}">
+                        <button class="btn btn-outline-primary" type="submit" > كشف حساب</button>
+        </form> </td>
+        <td>      
+          <form method="post" action="/payment">
+            <input type="hidden" name="py" value="{{record.id}}">
+                          <button class="btn btn-outline-primary" type="submit" > تم الدفع</button>
+          </form>
+        </td>
+        <td> <form method="post" action="/delete-client">
+          <input type="hidden" name="client" value="{{record.id}}">
+          <button type="submit" class="btn btn-primary">حذف</button>
+      </form>
+      </td>
         </tr>
       {% endfor %}
     </tbody>
@@ -95,5 +109,12 @@
          function display() {
             window.print();
          }
+                  var table = document.getElementsByTagName('table')[0],
+  rows = table.getElementsByTagName('tr'),
+  text = 'textContent' in document ? 'textContent' : 'innerText';
+
+for (var i = 1, len = rows.length; i < len; i++) {
+  rows[i].children[0][text] = i ;
+}
       </script>
 {% endblock %}

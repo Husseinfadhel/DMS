@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, flash, url_for, redirect
 from models import setup_db, Client, Driver, Masareef, Orders, Users
 from forms import AddClient, Search, AddDriver, AddMasrf, AddOrder
-from datetime import date
-
+from datetime import datetime
 app = Flask(__name__, template_folder='templates')
 
 db = setup_db(app)
@@ -80,6 +79,7 @@ def add_client_post():
 def client():
     query = Client.query.all()
     form = Search()
+
     return render_template('client.html', query=query, form=form)
 
 
@@ -94,6 +94,19 @@ def client_post():
     ))
     return render_template('client.html', query=filte, form=form)
 
+@app.route('/kashf', methods=["GET", "POST"])
+def kashf():
+    num = 0
+    net = 0
+    record_id = request.form['py']
+    query = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
+                                                            Driver.id == Orders.driver_id, Orders.client_id == record_id, Orders.state != 0, Orders.payment_state == 0).all()
+    for o,s,c in query:
+        if o.state == 1:
+            num += o.total_cost
+            net += o.net_cost
+
+    return render_template('kshf.html', query=query, num=num, net=net)
 
 @app.route('/add/driver', methods=['GET'])
 def add_driver():
@@ -233,8 +246,9 @@ def add_account():
 
 @app.route('/order', methods=['GET'])
 def order():
+    today=datetime.today().strftime('%Y-%m-%d')
     query = db.session.query(Orders, Driver, Client).filter(Client.id == Orders.client_id,
-                                                            Driver.id == Orders.driver_id).all()
+                                                            Driver.id == Orders.driver_id, Orders.date == today )
     form = Search()
     num = 0
     net = 0
@@ -302,7 +316,7 @@ def edit_order():
 def edit():
     orde = request.form['id']
     query = Orders.query.get(orde)
-    client = Client.query.filter(shop=request.form['client'])
+    client = Client.query.filter(Client.shop == request.form['shop']).first()
     query.client_id = client.id
     query.invoice_num = request.form['invoice_num']
     query.costumer = request.form['costumer']
@@ -312,6 +326,7 @@ def edit():
     query.total_cost = request.form['total']
     query.net_cost = request.form['net']
     query.driver_id = request.form['driver']
+    query.notes = request.form['note']
     Orders.update(query)
 
     return redirect(url_for('order'))
@@ -327,12 +342,12 @@ def state():
 
 @app.route('/payment', methods=['POST'])
 def payment():
-    change = Orders.query.filter(Orders.client_id == int(request.form['py']))
+    change = Orders.query.filter(Orders.client_id == request.form['py'])
     for record in change:
-        if record.state == 1:
-            record.payment_state = request.form['payment']
+        if record.state == 1 or record.state == 2:
+            record.payment_state = 1
             Orders.update(record)
-    return redirect(url_for("order"))
+    return redirect(url_for("client"))
 
 
 @app.route('/state2', methods=['POST'])
@@ -380,4 +395,4 @@ def delete_client():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

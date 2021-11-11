@@ -54,33 +54,16 @@
     </div>
   </div>
 </nav>
-<form method="post" class="form">
-<div class="input-group input-group-sm mb-3" style="padding: 5px;">
-            <label name="query" >بحث</label>
-              {{ form.search(class_ = 'form-control', autofocus = true) }}
-    </label > من </label>
-    <input type="date" name="h1" class="form-control">
-    <label>الى </label>
-        <input type="date" name="h2" class="form-control">
-
-    </div>
-  <input type="submit" value="بحث" class="btn btn-outline-primary">
-
-</form>
 <div class="input-group input-group-sm mb-3" style="padding: 15px;">
- <label style="background-color: gray; color:white; padding-right: 8px;"> المبلغ الاجمالي (غير شامل المدفوع): </label>
+ <label style="background-color: gray; color:white; padding-right: 8px;"> المبلغ الاجمالي : </label>
      <label style="background-color: gray; color:white;padding-right: 5px;"> {{ num }} </label>
- <label style="background-color: gray; color:white; padding-right: 15px;"> كلفة التوصيل (غير شامل المدفوع) :  </label>
+ <label style="background-color: gray; color:white; padding-right: 15px;"> كلفة التوصيل  :  </label>
  <label style="background-color: gray; color:white;padding-right: 5px;"> {{ net }} </label>
 </div>
   <table id="data" class="table table-striped">
     <thead>
       <tr>
-        <th>اسم المحل</th>
-                    <th> حالة الدفع </th>
         <th>رقم الوصل</th>
-        <th>العنوان</th>
-        <th>رقم الهاتف</th>
         <th> اسم الزبون</th>
         <th> رقم الهاتف </th>
         <th>عنوان الزبون </th>
@@ -88,25 +71,15 @@
         <th>كلفة التوصيل</th>
         <th> اسم السائق</th>
         <th> التاريخ </th>
-        <th> الحالة </th>
-        <th> تغيير الحالية </th>
-          <th> ملاحظة </th>
-
+        <th> حالة التوصيل </th>
+        <th>حالة الدفع</th>
+        <th> ملاحظة </th>
       </tr>
     </thead>
     <tbody>
       {% for Orders, Driver, Client in query %}
         <tr>
-          <td>{{ Client.shop }}</td>
-          {% if Orders.payment_state == 0 %}
-             {% set payment="لم يتم الدفع" %}
-            {% elif Orders.payment_state == 1 %}
-             {% set payment="تم الدفع" %}
-             {% endif %}
-        <td> {{ payment }}</td>
           <td>{{ Orders.invoice_num }}</td>
-          <td>{{ Client.address }}</td>
-          <td>{{ Client.phone }}</td>
           <td>{{ Orders.costumer }}</td>
           <td>{{ Orders.costumer_phone }}</td>
           <td>{{ Orders.costumer_add }}</td>
@@ -115,7 +88,6 @@
           <td>{{ Driver.name}}</td>
           <td>{{ Orders.date}}</td>
           {% if Orders.state==0 %}
-
             {% set row="قيد التوصيل" %}
             {% elif Orders.state==1 %}
             {% set row="تم التوصيل" %}
@@ -123,43 +95,24 @@
             {% set row="تم الارجاع" %}
             {% endif %}
           <td> {{ row }} </td>
-          <td>
-            <form method="post" action="/state">
-              <input type="hidden" name="order" value="{{Orders.id}}">
-                            <select class="form-select" name="state" aria-label="Default select example" onchange="this.form.submit()">
-                                <option selected> أختار </option>
-                              <option value="0" >قيد التوصيل</option>
-                              <option value="1" >تم التوصيل</option>
-                              <option value="2" >تم الارجاع</option>
+          {% if Orders.payment_state==0 %}
 
-                            </select>
-            </form>
-          </td>
-
-            <td> {{ Orders.notes }} </td>
-          <td>
-              <form method="post" action="/edit-order">
-                  <input type="hidden" name="order" value="{{ Orders.id }}">
-                  <button type="submit" class="btn btn-primary"> تعديل </button>
-              </form>
-          </td>
-          <td> <form method="post" action="/delete-order">
-              <input type="hidden" name="order" value="{{Orders.id}}">
-              <button type="submit" class="btn btn-primary">حذف</button>
-          </form>
-          </td>
+            {% set payment="لم يتم الدفع" %}
+            {% elif Orders.payment_state==1 %}
+            {% set payment="تم الدفع" %}
+            {% endif %}
+          <td>{{ payment }}</td>
+          <td> {{ Orders.notes }} </td>
         </tr>
 
       {% endfor %}
     </tbody>
   </table>
   <div id="none">
-<a href="/main" class="btn btn-primary">رجوع</a>
+<a href="/client" class="btn btn-primary">رجوع</a>
     <button class="btn btn-primary" onclick="printDiv()">طباعة</button>
     </div>
 </div>
-
-
     <div id="printable" style="visibility: hidden;">
             <div class="row align-items-center">
               <br>
@@ -176,65 +129,64 @@
               </div>
         </div>
         <div style="padding-top: 25px;">
-          <label name="query" >اسم العميل:</label>
-              {{ form.search(class_ = 'form-control', autofocus = true) }}
-             <table id="data" class="table table-striped">
-               <thead>
-                 <tr>
-                   <th>اسم المحل</th>
-                   <th>رقم الوصل</th>
-                   <th>العنوان</th>
-                   <th>رقم الهاتف</th>
-                   <th> اسم الزبون</th>
-                   <th> رقم الهاتف </th>
-                   <th>عنوان الزبون </th>
-                   <th>المبلغ الكلي</th>
-                   <th>كلفة التوصيل</th>
-                   <th> اسم السائق</th>
-                   <th> التاريخ </th>
-                   <th> الحالة </th>
-                 </tr>
-               </thead>
-               <tbody>
-                 {% for Orders, Driver, Client in query %}
-                   <tr>
-                     <td>{{ Client.shop }}</td>
-                     <td>{{ Orders.invoice_num }}</td>
-                     <td>{{ Client.address }}</td>
-                     <td>{{ Client.phone }}</td>
-                     <td>{{ Orders.costumer }}</td>
-                     <td>{{ Orders.costumer_phone }}</td>
-                     <td>{{ Orders.costumer_add }}</td>
-                     <td>{{ Orders.total_cost}}</td>
-                     <td>{{ Orders.net_cost}}</td>
-                     <td>{{ Driver.name}}</td>
-                     <td>{{ Orders.date}}</td>
-                     {% if Orders.state==0 %}
-           
-                       {% set row="قيد التوصيل" %}
-                       {% elif Orders.state==1 %}
-                       {% set row="تم التوصيل" %}
-                       {% elif Orders.state==2 %}
-                       {% set row="تم الارجاع" %}
-                       {% endif %}
-                     <td> {{ row }} </td>
+              <table id="data" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>رقم الوصل</th>
+                    <th> اسم الزبون</th>
+                    <th> رقم الهاتف </th>
+                    <th>عنوان الزبون </th>
+                    <th>المبلغ الكلي</th>
+                    <th>كلفة التوصيل</th>
+                    <th> اسم السائق</th>
+                    <th> التاريخ </th>
+                    <th> حالة التوصيل </th>
+                    <th>حالة الدفع</th>
+                      <th> ملاحظة </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for Orders, Driver, Client in query %}
+                    <tr>
+                      <td>{{ Orders.invoice_num }}</td>
+                      <td>{{ Orders.costumer }}</td>
+                      <td>{{ Orders.costumer_phone }}</td>
+                      <td>{{ Orders.costumer_add }}</td>
+                      <td>{{ Orders.total_cost}}</td>
+                      <td>{{ Orders.net_cost}}</td>
+                      <td>{{ Driver.name}}</td>
+                      <td>{{ Orders.date}}</td>
+                      {% if Orders.state==0 %}
+            
+                        {% set row="قيد التوصيل" %}
+                        {% elif Orders.state==1 %}
+                        {% set row="تم التوصيل" %}
+                        {% elif Orders.state==2 %}
+                        {% set row="تم الارجاع" %}
+                        {% endif %}
+                      <td> {{ row }} </td>
+                      {% if Orders.payment_state==0 %}
+            
+                        {% set pay="لم يتم الدفع" %}
+                        {% elif Orders.payment_state==1 %}
+                        {% set pay="تم الدفع" %}
+                        {% endif %}
+                      <td>{{ pay }}</td>
+                      <td> {{ Orders.notes }} </td>
                     </tr>
-
-                    {% endfor %}
-                  </tbody>
-                </table>
-                <br>
+            
+                  {% endfor %}
+                </tbody>
+              </table>
+                              <br>
                 <div style="padding: 15px;">
-                  <label style="color:rgb(0, 0, 0); padding-right: 8px;font-size: 30px;"> المبلغ الاجمالي (غير شامل المدفوع): </label>
+                  <label style="color:rgb(0, 0, 0); padding-right: 8px;font-size: 30px;"> المبلغ الاجمالي : </label>
                       <label style="color:rgb(0, 0, 0);padding-right: 5px;font-size: 30px;"> {{ num }} </label>
-                  <label style="color:rgb(0, 0, 0); padding-right: 15px;font-size: 30px;"> كلفة التوصيل (غير شامل المدفوع) : </label>
+                  <label style="color:rgb(0, 0, 0); padding-right: 15px;font-size: 30px;"> كلفة التوصيل  : </label>
                   <label style="color:rgb(0, 0, 0);padding-right: 5px;;font-size: 30px;"> {{ net }} </label>
                  </div>
         </div>
     </div>
-
-
-
 <script>
         function printDiv() { 
         let specific_element = document.getElementById("printable").innerHTML;

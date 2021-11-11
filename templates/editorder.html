@@ -29,45 +29,45 @@
               <h3 class="form-heading">تعديل الطلبية </h3>
 <div class="form-group">
              <label for="client"> اسم المحل </label>
-  <input name = "client" type="text" id="autoComplete" class="form-control" placeholder="{{ client.shop }}">
+  <input name = "shop" type="text" id="autoComplete" class="form-control" value="{{ client.shop }}">
     <input name="id" type="hidden" value="{{ query.id }}">
 
     </div>
       <div class="form-group">
             <label for="phone">رقم الوصل</label>
-  <input name = "invoice_num" type="text"  class="form-control" placeholder="{{ query.invoice_num }}">
+  <input name = "invoice_num" type="text"  class="form-control" value="{{ query.invoice_num }}">
     </div>
       <div class="form-group">
             <label for="date" >التاريخ</label>
 
-  <input name = "date" type="date" class="form-control" placeholder="{{ query.date }}">
+  <input name = "date" type="date" class="form-control" value="{{ query.date }}">
     </div>
             <div class="form-group">
             <label for="total">المبلغ الكلي (شامل كلفة التوصيل)</label>
-  <input name = "total" type="text" class="form-control" placeholder="{{ query.total_cost }}">
+  <input name = "total" type="text" class="form-control" value="{{ query.total_cost }}">
     </div>
             <div class="form-group">
             <label for="net">كلفة التوصيل</label>
-  <input name = "net" type="text" class="form-control" placeholder="{{ query.net_cost }}">
+  <input name = "net" type="text" class="form-control" value="{{ query.net_cost }}">
     </div>
   <div class="form-group">
              <label for="client">اسم الزبون</label>
-  <input name = "costumer" type="text"  class="form-control" placeholder="{{ query.costumer }}">
+  <input name = "costumer" type="text"  class="form-control" value="{{ query.costumer }}">
 
     </div>
   <div class="form-group">
              <label for="client">هاتف الزبون</label>
-  <input name = "costumer_phone" type="text" class="form-control" placeholder="{{ query.costumer_phone }}">
+  <input name = "costumer_phone" type="text" class="form-control" value="{{ query.costumer_phone }}">
 
     </div>
   <div class="form-group">
              <label for="client">عنوان الزبون</label>
-  <input name = "costumer_add" type="text" class="form-control" placeholder="{{ query.costumer_add }}">
+  <input name = "costumer_add" type="text" class="form-control" value="{{ query.costumer_add }}">
 
     </div>
     <div class="form-group">
              <label for="note"> ملاحظة </label>
-  <input name = "note" type="text"  class="form-control" placeholder="{{ query.notes }}">
+  <input name = "note" type="text"  class="form-control" value="{{ query.notes }}">
 
     </div>
 <div class="form-group">
@@ -94,7 +94,7 @@
 
     <script>
         function search(){const autoCompleteJS = new autoComplete({
-            placeHolder: "{{ client.shop }}",
+            value: "{{ client.shop }}",
             data: {
                 src:[{% for record in clients %}
 
